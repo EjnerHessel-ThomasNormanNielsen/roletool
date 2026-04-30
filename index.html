@@ -2,16 +2,17 @@
 <html lang="da">
 <head>
   <meta charset="UTF-8" />
-  <title>Role Assignment Tool v5 (Auto JSON)</title>
+  <title>Role Assignment Tool v6 (Auto GitHub)</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 p-6">
 <div class="max-w-7xl mx-auto">
-  <h1 class="text-2xl font-bold mb-4">Role Assignment Tool v5</h1>
+  <h1 class="text-2xl font-bold mb-4">Role Assignment Tool v6</h1>
 
   <div class="flex gap-2 mb-3">
     <input id="search" placeholder="Søg..." class="flex-1 p-2 border rounded" />
-    <button onclick="downloadJSON()" class="bg-green-500 text-white px-3 rounded">Download data</button>
+    <button onclick="toggleEdit()" class="bg-black text-white px-3 rounded">✏️ Edit</button>
+    <button onclick="saveToGitHub()" class="bg-green-600 text-white px-3 rounded">💾 Gem</button>
   </div>
 
   <table class="w-full bg-white rounded shadow text-sm">
@@ -27,29 +28,22 @@
     </thead>
     <tbody id="tableBody"></tbody>
   </table>
-
-  <h2 class="text-lg font-semibold mt-6">Tilføj ny rolle</h2>
-  <div class="grid grid-cols-5 gap-2 mt-2">
-    <input id="newAssigner" placeholder="Assigner" class="p-2 border rounded" />
-    <input id="newSystem" placeholder="System" class="p-2 border rounded" />
-    <input id="newRolle" placeholder="Rollenavn" class="p-2 border rounded" />
-    <input id="newBeskrivelse" placeholder="Noter" class="p-2 border rounded" />
-    <input id="newTildeles" placeholder="Tildeles i" class="p-2 border rounded" />
-  </div>
-  <button onclick="addRole()" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Tilføj</button>
 </div>
 
 <script>
 let data = [];
+let editMode = false;
+
+// ⚠️ SKAL UDFYLDES
+const GITHUB_USER = "EjnerHessel-ThomasNormanNielsen";
+const REPO = "roletool";
+const FILE_PATH = "roles.json";
+const TOKEN = "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";
 
 async function loadData(){
-  try{
-    const res = await fetch('roles.json');
-    data = await res.json();
-    render();
-  }catch(e){
-    console.error('Kunne ikke loade roles.json', e);
-  }
+  const res = await fetch('roles.json');
+  data = await res.json();
+  render();
 }
 
 function render(){
@@ -61,43 +55,52 @@ function render(){
   .forEach((r,i)=>{
     tbody.innerHTML += `
     <tr class="border-t">
-      <td contenteditable oninput="editField(${i},'assigner',this.innerText)">${r.assigner}</td>
-      <td contenteditable oninput="editField(${i},'system',this.innerText)">${r.system}</td>
-      <td contenteditable oninput="editField(${i},'rolle',this.innerText)">${r.rolle}</td>
-      <td contenteditable oninput="editField(${i},'beskrivelse',this.innerText)">${r.beskrivelse}</td>
-      <td contenteditable oninput="editField(${i},'tildeles',this.innerText)">${r.tildeles||''}</td>
+      <td ${editMode?'contenteditable':''} oninput="editField(${i},'assigner',this.innerText)">${r.assigner}</td>
+      <td ${editMode?'contenteditable':''} oninput="editField(${i},'system',this.innerText)">${r.system}</td>
+      <td ${editMode?'contenteditable':''} oninput="editField(${i},'rolle',this.innerText)">${r.rolle}</td>
+      <td ${editMode?'contenteditable':''} oninput="editField(${i},'beskrivelse',this.innerText)">${r.beskrivelse}</td>
+      <td ${editMode?'contenteditable':''} oninput="editField(${i},'tildeles',this.innerText)">${r.tildeles||''}</td>
       <td><button onclick="deleteRole(${i})">🗑️</button></td>
     </tr>`;
   });
 }
 
-function editField(i,key,val){ data[i][key]=val; }
-function deleteRole(i){ data.splice(i,1); render(); }
-
-function addRole(){
-  const r = {
-    assigner:newAssigner.value,
-    system:newSystem.value,
-    rolle:newRolle.value,
-    beskrivelse:newBeskrivelse.value,
-    tildeles:newTildeles.value
-  };
-  if(!r.rolle) return;
-  data.push(r);
-  newAssigner.value=newSystem.value=newRolle.value=newBeskrivelse.value=newTildeles.value='';
+function toggleEdit(){
+  editMode = !editMode;
   render();
 }
 
-function downloadJSON(){
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = "roles.json";
-  a.click();
+function editField(i,key,val){ data[i][key]=val; }
+function deleteRole(i){ data.splice(i,1); render(); }
+
+async function getFileSHA(){
+  const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE_PATH}`,{
+    headers:{ Authorization:`token ${TOKEN}` }
+  });
+  const json = await res.json();
+  return json.sha;
+}
+
+async function saveToGitHub(){
+  const sha = await getFileSHA();
+
+  await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE_PATH}`,{
+    method:'PUT',
+    headers:{
+      Authorization:`token ${TOKEN}`,
+      'Content-Type':'application/json'
+    },
+    body: JSON.stringify({
+      message:'Update roles.json',
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+      sha: sha
+    })
+  });
+
+  alert('Gemt til GitHub ✅');
 }
 
 document.getElementById('search').addEventListener('input', render);
-
 loadData();
 </script>
 </body>
