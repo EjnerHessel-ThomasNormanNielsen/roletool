@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <title>Role Assignment Tool v5 (Auto JSON)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+<div class="max-w-7xl mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Role Assignment Tool v5</h1>
+
+  <div class="flex gap-2 mb-3">
+    <input id="search" placeholder="Søg..." class="flex-1 p-2 border rounded" />
+    <button onclick="downloadJSON()" class="bg-green-500 text-white px-3 rounded">Download data</button>
+  </div>
+
+  <table class="w-full bg-white rounded shadow text-sm">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="p-2">Assigner</th>
+        <th class="p-2">System</th>
+        <th class="p-2">Rollenavn</th>
+        <th class="p-2">Noter</th>
+        <th class="p-2">Tildeles i</th>
+        <th class="p-2">Handling</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <h2 class="text-lg font-semibold mt-6">Tilføj ny rolle</h2>
+  <div class="grid grid-cols-5 gap-2 mt-2">
+    <input id="newAssigner" placeholder="Assigner" class="p-2 border rounded" />
+    <input id="newSystem" placeholder="System" class="p-2 border rounded" />
+    <input id="newRolle" placeholder="Rollenavn" class="p-2 border rounded" />
+    <input id="newBeskrivelse" placeholder="Noter" class="p-2 border rounded" />
+    <input id="newTildeles" placeholder="Tildeles i" class="p-2 border rounded" />
+  </div>
+  <button onclick="addRole()" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Tilføj</button>
+</div>
+
+<script>
+let data = [];
+
+async function loadData(){
+  try{
+    const res = await fetch('roles.json');
+    data = await res.json();
+    render();
+  }catch(e){
+    console.error('Kunne ikke loade roles.json', e);
+  }
+}
+
+function render(){
+  const tbody = document.getElementById('tableBody');
+  const search = document.getElementById('search').value.toLowerCase();
+  tbody.innerHTML='';
+
+  data.filter(r => Object.values(r).join(' ').toLowerCase().includes(search))
+  .forEach((r,i)=>{
+    tbody.innerHTML += `
+    <tr class="border-t">
+      <td contenteditable oninput="editField(${i},'assigner',this.innerText)">${r.assigner}</td>
+      <td contenteditable oninput="editField(${i},'system',this.innerText)">${r.system}</td>
+      <td contenteditable oninput="editField(${i},'rolle',this.innerText)">${r.rolle}</td>
+      <td contenteditable oninput="editField(${i},'beskrivelse',this.innerText)">${r.beskrivelse}</td>
+      <td contenteditable oninput="editField(${i},'tildeles',this.innerText)">${r.tildeles||''}</td>
+      <td><button onclick="deleteRole(${i})">🗑️</button></td>
+    </tr>`;
+  });
+}
+
+function editField(i,key,val){ data[i][key]=val; }
+function deleteRole(i){ data.splice(i,1); render(); }
+
+function addRole(){
+  const r = {
+    assigner:newAssigner.value,
+    system:newSystem.value,
+    rolle:newRolle.value,
+    beskrivelse:newBeskrivelse.value,
+    tildeles:newTildeles.value
+  };
+  if(!r.rolle) return;
+  data.push(r);
+  newAssigner.value=newSystem.value=newRolle.value=newBeskrivelse.value=newTildeles.value='';
+  render();
+}
+
+function downloadJSON(){
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = "roles.json";
+  a.click();
+}
+
+document.getElementById('search').addEventListener('input', render);
+
+loadData();
+</script>
+</body>
+</html>

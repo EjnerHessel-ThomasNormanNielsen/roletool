@@ -1,0 +1,30 @@
+[
+  {"assigner":"RoleAssigner","system":"CLARA","rolle":"CLARA_GD_DEALER","beskrivelse":"","tildeles":""},
+
+  {"assigner":"RoleAssigner","system":"DTDIAG","rolle":"DTDIAG.ALL.WORKSHOP.ESP.ADDROLE","beskrivelse":"","tildeles":""},
+  {"assigner":"RoleAssigner","system":"DTDIAG","rolle":"DTDIAG.TMO.WORKSHOP.INITIALSTARTUPDIAGNOSTICS","beskrivelse":"","tildeles":""},
+  {"assigner":"RoleAssigner","system":"DTDIAG","rolle":"DTDIAG.TRUCK.WORKSHOP.INITIALSTARTUPDIAGNOSTICS","beskrivelse":"","tildeles":""},
+  {"assigner":"RoleAssigner","system":"DTDIAG","rolle":"DTDIAG.FUSO.WORKSHOP.INITIALSTARTUPDIAGNOSTICS","beskrivelse":"","tildeles":""},
+  {"assigner":"RoleAssigner","system":"DTDIAG","rolle":"DTDIAG.ALL.WORKSHOP.STANDARDDIAGNOSTICS.UMAS","beskrivelse":"","tildeles":""},
+
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_RETAIL_ADMIN","beskrivelse":"","tildeles":""},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_ADDITIONAL_OUTLET","beskrivelse":"","tildeles":""},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_MD","beskrivelse":"Maintenance Documentation (DSB + Xentry Cockpit & Order)","tildeles":"Xentry"},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_PARTS_INFO","beskrivelse":"XENTRY Parts Information","tildeles":"Xentry"},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_TIPS_READER","beskrivelse":"XENTRY TIPS","tildeles":"Xentry"},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_TIPS_READER_CASE","beskrivelse":"XENTRY TIPS case module (kræver kursus og formular)","tildeles":"Xentry"},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_ORDER_VIEW","beskrivelse":"XENTRY Order","tildeles":"Xentry"},
+  {"assigner":"RoleAssigner","system":"TASP","rolle":"TASP_FLEET_VIEW","beskrivelse":"","tildeles":""},
+
+  {"assigner":"MarketAdmin","system":"ASTIS","rolle":"USER_AUTH_TASP","beskrivelse":"Alle skal have denne - giver adgang til ASTIS","tildeles":"ASTIS"},
+  {"assigner":"MarketAdmin","system":"TBLS","rolle":"TRUCK_UND_BUS_TRAINING_LEARNING_SYSTEM","beskrivelse":"TBLS","tildeles":"TBLS"},
+  {"assigner":"MarketAdmin","system":"T@D","rolle":"TCSMGR T@D","beskrivelse":"Customer Service User Manager (Administrator)","tildeles":"T@D"},
+  {"assigner":"MarketAdmin","system":"T@D","rolle":"TCSUSR T@D","beskrivelse":"Customer Service User (Standard)","tildeles":"T@D"},
+  {"assigner":"MarketAdmin","system":"TECHAPP","rolle":"TECHAPP_TM4TUSR","beskrivelse":"Standard (Mekaniker)","tildeles":""},
+  {"assigner":"MarketAdmin","system":"TM4","rolle":"TM4TUSR","beskrivelse":"Standard (Mekaniker)","tildeles":""},
+  {"assigner":"MarketAdmin","system":"T@D","rolle":"TS24HMGR","beskrivelse":"T@D S24h Service User Manager (Administrator)","tildeles":"T@D"},
+  {"assigner":"MarketAdmin","system":"T@D","rolle":"TS24HUSR","beskrivelse":"Standard (Værkfører)","tildeles":"T@D"},
+  {"assigner":"MarketAdmin","system":"GIS","rolle":"TDealerGIS","beskrivelse":"Access to Dealer GIS (map og status overview)","tildeles":"GIS"},
+  {"assigner":"MarketAdmin","system":"SAM","rolle":"SAM","beskrivelse":"","tildeles":""},
+  {"assigner":"MarketAdmin","system":"SUPCOCKPIT","rolle":"SUPCOCKPIT","beskrivelse":"","tildeles":""}
+]
