@@ -87,7 +87,7 @@ async function saveToGitHub(){
   await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE_PATH}`,{
     method:'PUT',
     headers:{
-      Authorization:`token ${TOKEN}`,
+      Authorization:`Bearer ${TOKEN}`,
       'Content-Type':'application/json'
     },
     body: JSON.stringify({
